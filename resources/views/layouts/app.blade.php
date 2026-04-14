@@ -32,7 +32,7 @@
                 extend: {
                     colors: {
                         primary: '#1a1a2e',
-                        accent: '#c8a96e',
+                        accent: '#1a1a2e',
                     }
                 }
             }
@@ -60,7 +60,7 @@
     <div class="header-inner">
         <a href="{{ route('home') }}" class="logo">
             @if(\App\Models\Setting::get('site_logo'))
-                <img src="{{ Storage::url(\App\Models\Setting::get('site_logo')) }}" alt="{{ \App\Models\Setting::get('site_name', 'BendyyYatak') }}" style="height: 40px;">
+                <img src="{{ Storage::url(\App\Models\Setting::get('site_logo')) }}" alt="{{ \App\Models\Setting::get('site_name', 'BendyyYatak') }}" style="height: 70px; width: 110px;">
             @else
                 Bendyy<span>Yatak</span>
             @endif

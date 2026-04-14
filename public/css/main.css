@@ -4,9 +4,9 @@
 :root {
     --primary: #1a1a2e;
     --primary-dark: #0d0d1a;
-    --accent: #c8a96e;
-    --accent-light: #f5edd8;
-    --accent-dark: #a8893e;
+    --accent: #1a1a2e;
+    --accent-light: #e8e8f0;
+    --accent-dark: #0d0d1a;
     --bg: #fafaf8;
     --card: #ffffff;
     --text: #1a1a2e;
@@ -15,6 +15,11 @@
     --border: #e5e7eb;
     --success: #10b981;
     --radius: 12px;
+}
+
+.text-primary {
+    --tw-text-opacity: 1;
+    color: rgb(253 253 255);
 }
 
 /* Base Styles */
@@ -315,7 +320,7 @@ img {
 
 .card-action-btn:hover { 
     background: var(--accent); 
-    color: var(--primary); 
+    color: #fff; 
 }
 
 .product-card-body { 
@@ -371,7 +376,7 @@ img {
 
 .badge-featured { 
     background: var(--accent); 
-    color: var(--primary); 
+    color: #fff; 
 }
 
 .badge-new { 
@@ -469,11 +474,12 @@ img {
 
 .btn-accent { 
     background: var(--accent); 
-    color: var(--primary); 
+    color: #fff; 
 }
 
 .btn-accent:hover { 
     background: var(--accent-dark); 
+    color: #fff;
 }
 
 .btn-outline { 

@@ -8,7 +8,7 @@
                 </div>
             @endif
             @if($product->is_bestseller)
-                <div class="inline-flex items-center gap-2 px-4 py-2 bg-accent text-primary text-[9px] font-black tracking-[0.2em] rounded-full shadow-lg">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white text-[9px] font-black tracking-[0.2em] rounded-full shadow-lg">
                     POPÜLER
                 </div>
             @endif
