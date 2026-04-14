@@ -41,7 +41,7 @@
     <div class="stat-card">
         <div class="stat-icon blue"><i class="fas fa-chart-line"></i></div>
         <div>
-            <div class="stat-value">₺{{ number_format($stats['total_amount'], 2, ',', '.') }}</div>
+            <div class="stat-value">₺{{ number_format((float) $stats['total_amount'], 2, ',', '.') }}</div>
             <div class="stat-label">Toplam Ciro</div>
         </div>
     </div>
@@ -126,7 +126,7 @@
                             <span style="color:var(--text-muted);">-</span>
                         @endif
                     </td>
-                    <td><strong>₺{{ number_format($transaction->amount, 2, ',', '.') }}</strong></td>
+                    <td><strong>₺{{ number_format((float) $transaction->amount, 2, ',', '.') }}</strong></td>
                     <td>
                         @if($transaction->installment_count > 1)
                             <span class="badge badge-primary">{{ $transaction->installment_count }} taksit</span>

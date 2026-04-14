@@ -135,7 +135,7 @@
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <div>
-                    <div class="stat-value">₺{{ number_format(\App\Models\PaytrTransaction::where('status', 'success')->sum('amount'), 2, ',', '.') }}</div>
+                    <div class="stat-value">₺{{ number_format((float) \App\Models\PaytrTransaction::where('status', 'success')->sum('amount'), 2, ',', '.') }}</div>
                     <div class="stat-label">Toplam Ciro</div>
                 </div>
             </div>
