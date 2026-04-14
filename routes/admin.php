@@ -5,7 +5,7 @@ use App\Http\Controllers\Admin;
 use App\Http\Middleware\AdminAuth;
 
 // ─── Admin Auth ───────────────────────────────────────────────
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware('web')->group(function () {
 
     Route::get('/giris', [Admin\AuthController::class, 'showLogin'])->name('login');
     Route::post('/giris', [Admin\AuthController::class, 'login'])->name('login.post');
