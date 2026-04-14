@@ -60,7 +60,7 @@
     <div class="header-inner">
         <a href="{{ route('home') }}" class="logo">
             @if(\App\Models\Setting::get('site_logo'))
-                <img src="{{ Storage::url(\App\Models\Setting::get('site_logo')) }}" alt="{{ \App\Models\Setting::get('site_name', 'BendyyYatak') }}" style="height: 70px; width: 110px;">
+                <img src="{{ Storage::url(\App\Models\Setting::get('site_logo')) }}" alt="{{ \App\Models\Setting::get('site_name', 'BendyyYatak') }}" style="max-height: 70px; max-width: 160px; object-fit: contain;">
             @else
                 Bendyy<span>Yatak</span>
             @endif
