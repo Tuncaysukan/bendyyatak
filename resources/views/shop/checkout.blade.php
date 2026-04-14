@@ -71,15 +71,44 @@
 
                     <div style="display:flex; flex-direction:column; gap:16px;">
                         @if($paymentIyzico)
-                        <label style="border:1.5px solid #e5e7eb; border-radius:12px; padding:20px; display:flex; align-items:center; gap:16px; cursor:pointer; transition:all .2s; background:#fafafa;">
-                            <input type="radio" name="payment_method" value="iyzico" checked style="width:20px; height:20px; accent-color:var(--primary);">
+                        <label style="border:1.5px solid #e5e7eb; border-radius:12px; padding:20px; display:flex; align-items:center; gap:16px; cursor:pointer; transition:all .2s;" onclick="selectPayment('iyzico')">
+                            <input type="radio" name="payment_method" value="iyzico" {{ !old('payment_method') ? 'checked' : '' }} style="width:20px; height:20px; accent-color:var(--primary);">
                             <div style="flex:1;">
-                                <div style="font-weight:700; font-size:15px; color:#1a1a2e; margin-bottom:4px;">Kredi / Banka Kartı (İyzico 3D)</div>
-                                <div style="font-size:12.5px; color:#6b7280;">Tüm Masterpass ve Visa kartlarıyla güvenli ödeme.</div>
+                                <div style="font-weight:700; font-size:15px; color:#1a1a2e; margin-bottom:4px;">Kredi / Banka Kartu (Iyzico 3D)</div>
+                                <div style="font-size:12.5px; color:#6b7280;">Tüm Masterpass ve Visa kartlaryyla güvenli ödeme.</div>
                             </div>
                             <i class="far fa-credit-card" style="font-size:24px; color:#9ca3af;"></i>
                         </label>
                         @endif
+
+                        <!-- PayTR Ödeme Seçeneði -->
+                        <label style="border:2px solid var(--accent); border-radius:12px; padding:20px; display:flex; align-items:center; gap:16px; cursor:pointer; transition:all .2s; background:linear-gradient(135deg, #fff9e6 0%, #fff 100%);" onclick="selectPayment('paytr')">
+                            <input type="radio" name="payment_method" value="paytr" style="width:20px; height:20px; accent-color:var(--primary);">
+                            <div style="flex:1;">
+                                <div style="font-weight:700; font-size:15px; color:#1a1a2e; margin-bottom:4px;">
+                                    <i class="fas fa-star" style="color:var(--accent); margin-right:4px;"></i>
+                                    Kredi Kartu ile Taksitli Ödeme (PayTR)
+                                </div>
+                                <div style="font-size:12.5px; color:#6b7280;">12'ye kadar taksit imkanu, tüm banka kartlary geçerli.</div>
+                                
+                                <!-- Taksit Seçenekleri -->
+                                <div id="paytr-installments" style="margin-top:12px; display:none;">
+                                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Taksit Seçeneði:</label>
+                                    <select name="installment" id="installment-select" style="width:100%; padding:8px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                                        <option value="1">Tek Çekim</option>
+                                        <option value="2">2 Taksit</option>
+                                        <option value="3">3 Taksit</option>
+                                        <option value="6">6 Taksit</option>
+                                        <option value="9">9 Taksit</option>
+                                        <option value="12">12 Taksit</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="font-size:10px; color:#6b7280; margin-bottom:4px;">Güvenli Ödeme</div>
+                                <i class="fas fa-shield-halved" style="font-size:24px; color:var(--accent);"></i>
+                            </div>
+                        </label>
 
                         @if($paymentBankTransfer)
                         <label style="border:1.5px solid #e5e7eb; border-radius:12px; padding:20px; display:flex; align-items:center; gap:16px; cursor:pointer; transition:all .2s;">
@@ -182,21 +211,144 @@
 </div>
 
 <script>
-    // Radio button seçim stilini değiştiren script
-    document.addEventListener('DOMContentLoaded', function() {
-        const radios = document.querySelectorAll('input[name="payment_method"]');
-        radios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                document.querySelectorAll('label[style*="border"]').forEach(label => {
-                    label.style.background = 'transparent';
-                    label.style.borderColor = '#e5e7eb';
-                });
-                if(this.checked) {
-                    this.parentElement.style.background = '#fafafa';
-                    this.parentElement.style.borderColor = 'var(--primary)';
+    // Ödeme yöntemi seçimi
+    function selectPayment(method) {
+        // Tüm radio button'laru güncelle
+        document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+            radio.checked = radio.value === method;
+        });
+        
+        // Taksit seçeneklerini göster/gizle
+        const installmentsDiv = document.getElementById('paytr-installments');
+        if (method === 'paytr') {
+            installmentsDiv.style.display = 'block';
+            loadInstallments();
+        } else {
+            installmentsDiv.style.display = 'none';
+        }
+        
+        // Label stillerini güncelle
+        document.querySelectorAll('label[onclick*="selectPayment"]').forEach(label => {
+            if (label.getAttribute('onclick').includes(method)) {
+                label.style.background = 'linear-gradient(135deg, #fff9e6 0%, #fff 100%)';
+                label.style.borderColor = 'var(--accent)';
+                label.style.borderWidth = '2px';
+            } else {
+                label.style.background = 'transparent';
+                label.style.borderColor = '#e5e7eb';
+                label.style.borderWidth = '1.5px';
+            }
+        });
+    }
+    
+    // Taksit seçeneklerini yükle
+    function loadInstallments() {
+        const total = {{ $total }};
+        fetch('{{ route("paytr.installments") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                amount: total
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.installments) {
+                updateInstallmentOptions(data.installments);
+            }
+        })
+        .catch(error => console.error('Taksit seçenekleri yüklenemedi:', error));
+    }
+    
+    // Taksit seçeneklerini güncelle
+    function updateInstallmentOptions(installments) {
+        const select = document.getElementById('installment-select');
+        select.innerHTML = '<option value="1">Tek Çekim</option>';
+        
+        Object.keys(installments).forEach(bank => {
+            const bankInstallments = installments[bank];
+            Object.keys(bankInstallments).forEach(instCount => {
+                const installment = bankInstallments[instCount];
+                if (installment.enabled && parseInt(instCount) > 1) {
+                    const option = document.createElement('option');
+                    option.value = instCount;
+                    option.textContent = `${instCount} Taksit (${bank}) - +${installment.commission}%`;
+                    select.appendChild(option);
                 }
             });
         });
+    }
+    
+    // Form gönderimi
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+        const selectedPayment = document.querySelector('input[name="payment_method"]:checked').value;
+        
+        if (selectedPayment === 'paytr') {
+            e.preventDefault();
+            
+            // Loading göster
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ödeme Sayfasýna Yönlendiriliyorsunuz...';
+            submitBtn.disabled = true;
+            
+            // Form verilerini al
+            const formData = new FormData(this);
+            
+            // Sipariþi oluþtur
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.order_id) {
+                    // PayTR ödeme isteði gönder
+                    return fetch('{{ route("paytr.create") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            order_id: data.order_id,
+                            installment: document.getElementById('installment-select').value || 1
+                        })
+                    });
+                } else {
+                    throw new Error(data.message || 'Sipariþ oluþturulamadý');
+                }
+            })
+            .then(response => response.json())
+            .then(paytrData => {
+                if (paytrData.success && paytrData.iframe_url) {
+                    // PayTR iframe'ine yönlendir
+                    window.location.href = paytrData.iframe_url;
+                } else {
+                    throw new Error(paytrData.error || 'Ödeme oluþturulamadý');
+                }
+            })
+            .catch(error => {
+                console.error('Ödeme hatasý:', error);
+                alert(error.message || 'Ödeme iþlemi sýrasýnda bir hata oluþtu. Lütfen tekrar deneyin.');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        }
+    });
+    
+    // Sayfa yüklendiðinde
+    document.addEventListener('DOMContentLoaded', function() {
+        // Varsayýlan ödeme yöntemini seç
+        const defaultPayment = '{{ old('payment_method', 'paytr') }}';
+        selectPayment(defaultPayment);
+    });
         
         // Form gönderilirken buton durumunu kitletme (Double submit prevention)
         const form = document.getElementById('checkout-form');

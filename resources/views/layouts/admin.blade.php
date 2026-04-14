@@ -224,6 +224,9 @@
         <a href="{{ route('admin.payment.index') }}" class="nav-item {{ request()->routeIs('admin.payment.*') || request()->routeIs('admin.installment.*') ? 'active' : '' }}">
             <i class="fas fa-credit-card"></i> Ödeme Kanalları
         </a>
+        <a href="{{ route('admin.paytr.settings') }}" class="nav-item {{ request()->routeIs('admin.paytr.*') ? 'active' : '' }}" style="padding-left: 36px;">
+            <i class="fas fa-money-check-dollar"></i> PayTR Ayarları
+        </a>
         <a href="{{ route('admin.shipping.index') }}" class="nav-item {{ request()->routeIs('admin.shipping.*') ? 'active' : '' }}">
             <i class="fas fa-truck"></i> Kargo Ayarları
         </a>
@@ -307,15 +310,19 @@ function confirmDelete(btn) {
         customClass: { popup: 'swal-admin' },
     }).then(r => {
         if (r.isConfirmed) {
-            // form içindeyse submit et
-            const form = btn.closest('form');
-            if (form) { form.submit(); return; }
-            // yoksa fetch DELETE
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-                body: JSON.stringify({ _method: 'DELETE' })
-            }).then(() => location.reload());
+            // data-no-form yoksa ve form içindeyse submit et
+            if (!btn.dataset.noForm) {
+                const form = btn.closest('form');
+                if (form) { form.submit(); return; }
+            }
+            // yoksa dinamik form oluştur ve submit et
+            const f = document.createElement('form');
+            f.method = 'POST';
+            f.action = url;
+            f.style.display = 'none';
+            f.innerHTML = `<input type="hidden" name="_token" value="${csrfToken}"><input type="hidden" name="_method" value="DELETE">`;
+            document.body.appendChild(f);
+            f.submit();
         }
     });
 }

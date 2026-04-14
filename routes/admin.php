@@ -135,5 +135,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 'destroy' => 'sliders.destroy',
             ]);
         Route::post('anasayfa-vitrini/siralama', [Admin\SliderController::class, 'updateOrder'])->name('sliders.order');
+
+        // PayTR Ödemeleri
+        Route::get('paytr', [Admin\PaytrController::class, 'index'])->name('paytr.index');
+        Route::get('paytr/ayarlar', [Admin\PaytrController::class, 'settings'])->name('paytr.settings');
+        Route::post('paytr/ayarlar', [Admin\PaytrController::class, 'saveSettings'])->name('paytr.settings.save');
+        Route::get('paytr/rapor', [Admin\PaytrController::class, 'report'])->name('paytr.report');
+        Route::get('paytr/export', [Admin\PaytrController::class, 'export'])->name('paytr.export');
+        Route::get('paytr/{transaction}', [Admin\PaytrController::class, 'show'])->name('paytr.show');
     });
 });

@@ -39,364 +39,7 @@
         }
     </script>
 
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root {
-            --primary: #1a1a2e;
-            --primary-dark: #0d0d1a;
-            --accent: #c8a96e;
-            --accent-light: #f5edd8;
-            --accent-dark: #a8893e;
-            --bg: #fafaf8;
-            --card: #ffffff;
-            --text: #1a1a2e;
-            --text-muted: #6b7280;
-            --text-light: #9ca3af;
-            --border: #e5e7eb;
-            --success: #10b981;
-            --radius: 12px;
-        }
-        html, body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; width: 100%; position: relative; margin: 0; padding: 0; }
-        a { color: inherit; text-decoration: none; }
-        img { max-width: 100%; }
-        /* ─── TOPBAR ─── */
-        .topbar {
-            background: var(--primary);
-            color: rgba(255,255,255,.7);
-            font-size: 12px;
-            padding: 8px 0;
-            text-align: center;
-        }
-        /* ─── HEADER ─── */
-        .header {
-            background: #fff;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 200;
-        }
-        .header-inner {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            gap: 32px;
-        }
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: -0.5px;
-            flex-shrink: 0;
-        }
-        .logo span { color: var(--accent); }
-        .main-nav { display: flex; align-items: center; gap: 28px; flex: 1; }
-        .main-nav a { font-size: 13.5px; font-weight: 500; color: var(--text); transition: color .2s; position: relative; }
-        .main-nav a:hover { color: var(--accent-dark); }
-        .main-nav .dropdown { position: relative; }
-        .main-nav .dropdown-menu {
-            position: absolute;
-            top: calc(100% + 12px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: 0 16px 40px rgba(0,0,0,.12);
-            padding: 8px;
-            min-width: 200px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all .2s;
-            z-index: 100;
-        }
-        .main-nav .dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; top: calc(100% + 8px); }
-        .dropdown-menu a {
-            display: block;
-            padding: 9px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            transition: background .2s;
-        }
-        .dropdown-menu a:hover { background: var(--accent-light); color: var(--accent-dark); }
-        /* Search */
-        .header-search {
-            display: flex;
-            align-items: center;
-            background: #f4f5f9;
-            border-radius: 99px;
-            padding: 8px 16px;
-            gap: 8px;
-            flex: 1;
-            max-width: 360px;
-            margin: 0 auto;
-        }
-        .header-search input {
-            border: none;
-            background: transparent;
-            font-size: 13.5px;
-            font-family: 'Inter', sans-serif;
-            outline: none;
-            flex: 1;
-            color: var(--text);
-        }
-        .header-search i { color: var(--text-muted); font-size: 14px; }
-        /* Header icons */
-        .header-icons { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
-        .header-icon-btn {
-            position: relative;
-            color: var(--text);
-            font-size: 18px;
-            transition: color .2s;
-            cursor: pointer;
-        }
-        .header-icon-btn:hover { color: var(--accent-dark); }
-        .header-icon-btn .badge {
-            position: absolute;
-            top: -6px;
-            right: -8px;
-            background: var(--accent);
-            color: var(--primary);
-            font-size: 10px;
-            font-weight: 700;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        /* ─── CONTAINER ─── */
-        .container-custom { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-        /* ─── BREADCRUMB ─── */
-        .breadcrumb { padding: 12px 0; font-size: 12.5px; color: var(--text-muted); }
-        .breadcrumb a { color: var(--text-muted); }
-        .breadcrumb span { margin: 0 6px; }
-        /* ─── PRODUCT CARD ─── */
-        .product-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            overflow: hidden;
-            transition: transform .25s, box-shadow .25s;
-            position: relative;
-        }
-        .product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.1); }
-        .product-card-img {
-            aspect-ratio: 1 / 1;
-            overflow: hidden;
-            background: #f5f5f0;
-            position: relative;
-        }
-        .product-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
-        .product-card:hover .product-card-img img { transform: scale(1.04); }
-        .product-card-badges { position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; gap: 6px; }
-        .product-card-actions { position: absolute; top: 12px; right: 12px; display: flex; flex-direction: column; gap: 8px; opacity: 0; transition: opacity .2s; }
-        .product-card:hover .product-card-actions { opacity: 1; }
-        .card-action-btn {
-            width: 34px;
-            height: 34px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            color: var(--text);
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,.12);
-            border: none;
-            transition: all .2s;
-        }
-        .card-action-btn:hover { background: var(--accent); color: var(--primary); }
-        .product-card-body { padding: 16px; }
-        .product-card-cat { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
-        .product-card-name { font-size: 14px; font-weight: 600; line-height: 1.4; margin-bottom: 10px; }
-        .product-card-price { display: flex; align-items: center; gap: 10px; }
-        .price-main { font-size: 17px; font-weight: 700; color: var(--text); }
-        .price-old { font-size: 13px; color: var(--text-muted); text-decoration: line-through; }
-        .badge-pill { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 700; }
-        .badge-discount { background: #ff4646; color: white; }
-        .badge-featured { background: var(--accent); color: var(--primary); }
-        .badge-new { background: var(--primary); color: white; }
-        .product-card-cart {
-            width: 100%;
-            margin-top: 12px;
-            padding: 10px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            transition: all .2s;
-        }
-        .product-card-cart:hover { background: var(--accent); color: var(--primary); }
-        /* ─── SECTION ─── */
-        .section { padding: 60px 0; }
-        .section-header { text-align: center; margin-bottom: 40px; }
-        .section-label { font-size: 12px; color: var(--accent-dark); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
-        .section-title { font-size: 32px; font-weight: 800; line-height: 1.25; color: var(--text); }
-        .section-sub { font-size: 15px; color: var(--text-muted); margin-top: 12px; }
-        /* ─── GRID ─── */
-        .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-        .products-grid-3 { grid-template-columns: repeat(3, 1fr); }
-        /* ─── BUTTONS ─── */
-        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .2s; text-decoration: none; }
-        .btn-primary { background: var(--primary); color: #fff; }
-        .btn-primary:hover { background: var(--primary-dark); }
-        .btn-accent { background: var(--accent); color: var(--primary); }
-        .btn-accent:hover { background: var(--accent-dark); }
-        .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
-        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-        .btn-lg { padding: 14px 32px; font-size: 15px; }
-        /* ─── TRUST BADGES ─── */
-        .trust-bar {
-            background: var(--primary);
-            color: rgba(255,255,255,.85);
-            padding: 24px 0;
-        }
-        .trust-items { display: flex; justify-content: center; gap: 60px; }
-        .trust-item { display: flex; align-items: center; gap: 14px; }
-        .trust-item i { font-size: 22px; color: var(--accent); }
-        .trust-item-text strong { display: block; font-size: 13.5px; font-weight: 600; color: #fff; }
-        .trust-item-text span { font-size: 11.5px; color: rgba(255,255,255,.5); }
-        /* ─── FOOTER ─── */
-        .footer { background: var(--primary); color: rgba(255,255,255,.7); padding: 60px 0 0; margin-top: 80px; }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
-        .footer-brand h2 { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 12px; }
-        .footer-brand h2 span { color: var(--accent); }
-        .footer-brand p { font-size: 13px; line-height: 1.7; }
-        .footer-col h3 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 16px; text-transform: uppercase; letter-spacing: .06em; }
-        .footer-col a { display: block; font-size: 13px; color: rgba(255,255,255,.6); margin-bottom: 9px; transition: color .2s; }
-        .footer-col a:hover { color: var(--accent); }
-        .footer-social { display: flex; gap: 12px; margin-top: 20px; }
-        .footer-social a { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: rgba(255,255,255,.6); transition: all .2s; }
-        .footer-social a:hover { background: var(--accent); border-color: var(--accent); color: var(--primary); }
-        .footer-bottom { border-top: 1px solid rgba(255,255,255,.08); padding: 20px 0; margin-top: 40px; text-align: center; font-size: 12px; }
-        /* ─── ALERTS ─── */
-        .alert { padding: 14px 18px; border-radius: 10px; margin-bottom: 16px; font-size: 13.5px; display: flex; align-items: center; gap: 10px; }
-        .alert-success { background: #dcfce7; color: #15803d; }
-        .alert-danger  { background: #fee2e2; color: #b91c1c; }
-        /* ─── CART NOTIFICATION ─── */
-        .cart-toast {
-            position: fixed;
-            bottom: 90px;
-            right: 24px;
-            background: var(--primary);
-            color: white;
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-size: 13.5px;
-            font-weight: 500;
-            box-shadow: 0 8px 24px rgba(0,0,0,.2);
-            z-index: 1000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all .3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .cart-toast.show { transform: translateY(0); opacity: 1; }
-        /* ─── WHATSAPP ─── */
-        .whatsapp-btn {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 54px;
-            height: 54px;
-            background: #25D366;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-            box-shadow: 0 4px 20px rgba(37,211,102,.4);
-            z-index: 500;
-            transition: transform .2s;
-        }
-        .whatsapp-btn:hover { transform: scale(1.1); }
-        /* ─── COMPARE BAR ─── */
-        .compare-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--primary);
-            color: white;
-            padding: 14px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 400;
-            transform: translateY(100%);
-            transition: transform .3s;
-        }
-        .compare-bar.show { transform: translateY(0); }
-        /* ─── MOBILE BOTTOM NAV ─── */
-        .mobile-bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: #fff;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
-            z-index: 1000;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        .mobile-bottom-nav .nav-item {
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 12px 0; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; transition: color .2s;
-        }
-        .mobile-bottom-nav .nav-item.active { color: var(--primary); }
-        .mobile-bottom-nav .nav-item i { font-size: 18px; }
-        .mobile-bottom-nav .nav-badge {
-            position: absolute; top: -5px; right: -10px; background: var(--accent); color: var(--primary);
-            font-size: 9px; font-weight: 700; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%;
-        }
-        .mobile-menu-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5); z-index: 1001;
-            opacity: 0; visibility: hidden; transition: all .3s;
-        }
-        .mobile-menu-overlay.show { opacity: 1; visibility: visible; }
-        .mobile-menu-content {
-            position: absolute; top: 0; bottom: 0; left: -300px; width: 280px;
-            background: #fff; transition: left .3s; box-shadow: 5px 0 15px rgba(0,0,0,0.1);
-            display: flex; flex-direction: column;
-        }
-        .mobile-menu-overlay.show .mobile-menu-content { left: 0; }
-        /* ─── RESPONSIVE ─── */
-        @media (max-width: 1024px) {
-            .products-grid { grid-template-columns: repeat(3, 1fr); }
-            .footer-grid { grid-template-columns: 1fr 1fr; }
-        }
-        @media (max-width: 768px) {
-            .main-nav { display: none; }
-            .products-grid { grid-template-columns: repeat(2, 1fr); }
-            .trust-items { flex-direction: column; gap: 20px; align-items: center; }
-            .section-title { font-size: 24px; }
-            .footer-grid { grid-template-columns: 1fr; }
-            .topbar { font-size: 11px; padding: 6px 0; }
-            .tb-hide-mobile { display: none !important; }
-            .header-inner { flex-wrap: wrap; height: auto; padding: 12px 20px; gap: 12px; justify-content: space-between; }
-            .header-search { order: 3; max-width: 100%; width: 100%; flex-basis: 100%; margin-top: 4px; padding: 12px 16px; border: 1px solid var(--border); }
-            .header-search input { font-size: 15px; }
-            .header-icons { gap: 14px; }
-            .logo { font-size: 22px; }
-            .mobile-bottom-nav { display: flex; }
-            body { padding-bottom: 60px; }
-            .whatsapp-btn { bottom: 80px; right: 16px; width: 48px; height: 48px; font-size: 22px; }
-        }
-        @media (max-width: 480px) {
-            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     @stack('styles')
 </head>
 <body>
@@ -404,7 +47,7 @@
 <!-- Topbar -->
 <div class="topbar">
     <div class="container">
-        <span><i class="fas fa-truck fa-xs"></i> ₺{{ number_format(\App\Models\Setting::get('free_shipping_limit', 2000), 0, ',', '.') }} üzeri ücretsiz kargo</span>
+        <span><i class="fas fa-truck fa-xs"></i> ₺{{ number_format((float) \App\Models\Setting::get('free_shipping_limit', 2000), 0, ',', '.') }} üzeri ücretsiz kargo</span>
         <span class="tb-hide-mobile" style="margin: 0 20px;">|</span>
         <span class="tb-hide-mobile"><i class="fas fa-phone fa-xs"></i> {{ \App\Models\Setting::get('site_phone', '') }}</span>
         <span class="tb-hide-mobile" style="margin: 0 20px;">|</span>
@@ -497,7 +140,7 @@
                 <i class="fas fa-truck-fast"></i>
                 <div class="trust-item-text">
                     <strong>Ücretsiz Kargo</strong>
-                    <span>₺{{ number_format(\App\Models\Setting::get('free_shipping_limit', 2000), 0, ',', '.') }} ve üzeri</span>
+                    <span>₺{{ number_format((float) \App\Models\Setting::get('free_shipping_limit', 2000), 0, ',', '.') }} ve üzeri</span>
                 </div>
             </div>
             <div class="trust-item">
@@ -617,11 +260,15 @@
         <span>Anasayfa</span>
     </a>
     <a href="javascript:void(0)" class="nav-item" onclick="document.getElementById('mobile-menu').classList.add('show')">
-        <i class="fas fa-bars"></i>
+        <i class="fas fa-th-large"></i>
         <span>Kategoriler</span>
     </a>
+    <a href="{{ route('search') }}" class="nav-item {{ request()->routeIs('search') ? 'active' : '' }}">
+        <i class="fas fa-magnifying-glass"></i>
+        <span>Ara</span>
+    </a>
     <a href="{{ route('cart.index') }}" class="nav-item {{ request()->routeIs('cart.index') ? 'active' : '' }}">
-        <div style="position:relative;">
+        <div style="position:relative;display:inline-block;">
             <i class="fas fa-shopping-bag"></i>
             @php $cartCount = array_sum(array_column(session('cart', []), 'quantity')); @endphp
             @if($cartCount > 0) <span class="nav-badge" id="mobile-cart-badge">{{ $cartCount }}</span> @endif
@@ -635,36 +282,79 @@
 </div>
 
 <!-- Mobile Menu Overlay -->
-<div class="mobile-menu-overlay" id="mobile-menu">
+<div class="mobile-menu-overlay" id="mobile-menu" onclick="if(event.target===this)this.classList.remove('show')">
     <div class="mobile-menu-content">
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid #eee;">
-            <h3 style="font-size:16px; font-weight:800; color:var(--primary);">Menü</h3>
-            <button onclick="document.getElementById('mobile-menu').classList.remove('show')" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);"><i class="fas fa-times"></i></button>
+        <!-- Menu Header -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:20px; border-bottom:1px solid #f0f0f0; background:#fafaf8;">
+            <div>
+                <h3 style="font-size:18px; font-weight:800; color:var(--primary); margin:0;">Bendyy<span style="color:var(--accent);">Yatak</span></h3>
+                <p style="font-size:11px; color:var(--text-muted); margin:4px 0 0;">Kategoriler & Menü</p>
+            </div>
+            <button onclick="document.getElementById('mobile-menu').classList.remove('show')" style="width:36px;height:36px;background:#fff;border:1px solid #e5e7eb;border-radius:50%;font-size:16px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-        <div style="padding:10px; overflow-y:auto; flex:1;">
+
+        <!-- Search in Menu -->
+        <div style="padding:12px 20px; border-bottom:1px solid #f0f0f0;">
+            <form action="{{ route('search') }}" method="GET" style="display:flex;gap:8px;">
+                <input type="text" name="q" placeholder="Ürün ara..." style="flex:1;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;outline:none;font-family:inherit;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='#e5e7eb'">
+                <button type="submit" style="background:var(--primary);color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;font-size:14px;"><i class="fas fa-magnifying-glass"></i></button>
+            </form>
+        </div>
+
+        <!-- Categories -->
+        <div style="padding:8px 12px; overflow-y:auto; flex:1;">
+            <div style="padding:8px 8px 4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text-light);">Kategoriler</div>
             @php
                 try {
-                    $navCats = \App\Models\Category::whereNull('parent_id')->where('is_active', true)->orderBy('sort_order')->get();
+                    $navCats = \App\Models\Category::whereNull('parent_id')->where('is_active', true)->with('children')->orderBy('sort_order')->get();
                 } catch (\Exception $e) { $navCats = collect(); }
             @endphp
             @foreach($navCats as $cat)
-                <a href="{{ route('category.show', $cat) }}" style="display:block; padding:12px 10px; border-bottom:1px solid #f9f9f9; font-weight:600; font-size:14px; color:var(--text);">
+                <a href="{{ route('category.show', $cat) }}" style="display:flex; align-items:center; gap:12px; padding:12px 10px; border-radius:10px; font-weight:500; font-size:14px; color:var(--text); transition:background .15s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                    <i class="fas fa-chevron-right" style="font-size:10px;color:var(--accent);"></i>
                     {{ $cat->name }}
                 </a>
+                @if($cat->children->isNotEmpty())
+                    @foreach($cat->children as $sub)
+                        <a href="{{ route('category.show', $sub) }}" style="display:flex; align-items:center; gap:12px; padding:10px 10px 10px 32px; border-radius:10px; font-weight:400; font-size:13px; color:var(--text-muted); transition:background .15s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                            {{ $sub->name }}
+                        </a>
+                    @endforeach
+                @endif
             @endforeach
-            <a href="{{ route('blog.index') }}" style="display:block; padding:12px 10px; font-weight:600; font-size:14px; color:var(--text); border-bottom:1px solid #f9f9f9;">Blog</a>
+            <a href="{{ route('blog.index') }}" style="display:flex; align-items:center; gap:12px; padding:12px 10px; border-radius:10px; font-weight:500; font-size:14px; color:var(--text); transition:background .15s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                <i class="fas fa-chevron-right" style="font-size:10px;color:var(--accent);"></i>
+                Blog
+            </a>
             
-            <div style="margin-top: 20px; padding: 10px;">
-                <h4 style="font-size: 11px; text-transform: uppercase; color: var(--text-light); margin-bottom: 10px;">Hesabım</h4>
+            <!-- Account Links -->
+            <div style="margin-top:16px; padding-top:16px; border-top:1px solid #f0f0f0;">
+                <div style="padding:8px 8px 4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text-light);">Hesabım</div>
                 @auth
-                    <a href="{{ route('account.index') }}" style="display:block; padding:8px 0; font-size:14px; color:var(--text);"><i class="far fa-user" style="width:20px;"></i> Profilim</a>
-                    <a href="{{ route('account.orders') }}" style="display:block; padding:8px 0; font-size:14px; color:var(--text);"><i class="fas fa-box" style="width:20px;"></i> Siparişlerim</a>
-                    <form action="{{ route('logout') }}" method="POST" style="margin-top:10px;">
-                        @csrf <button type="submit" style="background:none; border:none; padding:8px 0; font-size:14px; color:#ef4444; font-weight:600; cursor:pointer;"><i class="fas fa-sign-out-alt" style="width:20px;"></i> Çıkış Yap</button>
+                    <a href="{{ route('account.index') }}" style="display:flex; align-items:center; gap:12px; padding:10px; border-radius:10px; font-size:13px; color:var(--text); transition:background .15s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                        <i class="far fa-user" style="width:18px;text-align:center;color:var(--text-muted);"></i> Profilim
+                    </a>
+                    <a href="{{ route('account.orders') }}" style="display:flex; align-items:center; gap:12px; padding:10px; border-radius:10px; font-size:13px; color:var(--text); transition:background .15s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                        <i class="fas fa-box" style="width:18px;text-align:center;color:var(--text-muted);"></i> Siparişlerim
+                    </a>
+                    <a href="{{ route('wishlist.index') }}" style="display:flex; align-items:center; gap:12px; padding:10px; border-radius:10px; font-size:13px; color:var(--text); transition:background .15s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                        <i class="far fa-heart" style="width:18px;text-align:center;color:var(--text-muted);"></i> Favorilerim
+                    </a>
+                    <form action="{{ route('logout') }}" method="POST" style="margin-top:8px;">
+                        @csrf 
+                        <button type="submit" style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;width:100%;background:none;border:none;font-size:13px;color:#ef4444;font-weight:500;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='transparent'">
+                            <i class="fas fa-sign-out-alt" style="width:18px;text-align:center;"></i> Çıkış Yap
+                        </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" style="display:block; padding:8px 0; font-size:14px; color:var(--text);"><i class="fas fa-sign-in-alt" style="width:20px;"></i> Giriş Yap</a>
-                    <a href="{{ route('register') }}" style="display:block; padding:8px 0; font-size:14px; color:var(--text);"><i class="fas fa-user-plus" style="width:20px;"></i> Kayıt Ol</a>
+                    <a href="{{ route('login') }}" style="display:flex; align-items:center; gap:12px; padding:10px; border-radius:10px; font-size:13px; color:var(--text); transition:background .15s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                        <i class="fas fa-sign-in-alt" style="width:18px;text-align:center;color:var(--text-muted);"></i> Giriş Yap
+                    </a>
+                    <a href="{{ route('register') }}" style="display:flex; align-items:center; gap:12px; padding:10px; border-radius:10px; font-size:13px; color:var(--text); transition:background .15s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                        <i class="fas fa-user-plus" style="width:18px;text-align:center;color:var(--text-muted);"></i> Kayıt Ol
+                    </a>
                 @endauth
             </div>
         </div>

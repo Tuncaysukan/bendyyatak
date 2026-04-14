@@ -45,7 +45,7 @@
                         <td>
                             <div style="display:flex; gap:6px;">
                                 <a href="{{ route('admin.sliders.edit', $slider) }}" class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></a>
-                                <button type="button" form="delete-form-{{ $slider->id }}" class="btn btn-danger btn-sm" onclick="confirmDelete(this)"><i class="fas fa-trash"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="event.stopPropagation(); confirmDelete(this)" data-url="{{ route('admin.sliders.destroy', $slider) }}" data-name="{{ $slider->title ?: 'Bu slider' }}" data-no-form="1"><i class="fas fa-trash"></i></button>
                             </div>
                         </td>
                     </tr>
@@ -65,11 +65,5 @@
         @endif
     </form>
 </div>
-
-@foreach($sliders as $slider)
-<form id="delete-form-{{ $slider->id }}" action="{{ route('admin.sliders.destroy', $slider) }}" method="POST" style="display:none;">
-    @csrf @method('DELETE')
-</form>
-@endforeach
 
 @endsection

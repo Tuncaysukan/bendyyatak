@@ -48,6 +48,12 @@ Route::post('/siparis-takip', [Shop\OrderController::class, 'trackPost'])->name(
 Route::post('/odeme/callback', [Shop\CheckoutController::class, 'callback'])->name('checkout.callback');
 Route::get('/odeme/basarisiz', [Shop\CheckoutController::class, 'failed'])->name('checkout.failed');
 
+// PayTR Ödeme
+Route::post('/paytr/create', [Shop\PaytrController::class, 'create'])->name('paytr.create');
+Route::post('/paytr/callback', [Shop\PaytrController::class, 'callback'])->name('paytr.callback');
+Route::post('/paytr/installments', [Shop\PaytrController::class, 'getInstallments'])->name('paytr.installments');
+Route::get('/paytr/iframe/{token}', [Shop\PaytrController::class, 'iframe'])->name('paytr.iframe');
+
 // Hesabım (Auth gerekli)
 Route::middleware('auth')->prefix('hesabim')->name('account.')->group(function () {
     Route::get('/', [Shop\AccountController::class, 'index'])->name('index');
