@@ -39,7 +39,7 @@
         }
     </script>
 
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}?v=1.2">
     @stack('styles')
 </head>
 <body>
@@ -57,68 +57,83 @@
 
 <!-- Header -->
 <header class="header">
-    <div class="header-inner">
-        <a href="{{ route('home') }}" class="logo">
-            @if(\App\Models\Setting::get('site_logo'))
-                <img src="{{ Storage::url(\App\Models\Setting::get('site_logo')) }}" alt="{{ \App\Models\Setting::get('site_name', 'BendyyYatak') }}" style="max-height: 70px; max-width: 160px; object-fit: contain;">
-            @else
-                Bendyy<span>Yatak</span>
-            @endif
-        </a>
+    <div class="header-main">
+        <div class="container header-container">
+            <!-- Left Side: Menus -->
+            <div class="header-left">
+                <button class="mobile-menu-btn header-hide-desktop" onclick="document.getElementById('mobile-menu').classList.add('show')">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="nav-links header-hide-mobile">
+                    @php
+                        try {
+                            $navCategories = \App\Models\Category::whereNull('parent_id')->where('is_active', true)->with('children')->orderBy('sort_order')->get();
+                        } catch (\Exception $e) {
+                            $navCategories = collect();
+                        }
+                    @endphp
+                    @foreach($navCategories as $cat)
+                        @if($cat->children->isNotEmpty())
+                            <div class="nav-dropdown">
+                                <a href="{{ route('category.show', $cat) }}" class="nav-link">{{ $cat->name }} <i class="fas fa-chevron-down"></i></a>
+                                <div class="dropdown-content">
+                                    @foreach($cat->children as $sub)
+                                        <a href="{{ route('category.show', $sub) }}">{{ $sub->name }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @else
+                            <a href="{{ route('category.show', $cat) }}" class="nav-link">{{ $cat->name }}</a>
+                        @endif
+                    @endforeach
+                    <a href="{{ route('blog.index') }}" class="nav-link">Blog</a>
+                </nav>
+            </div>
 
-        <nav class="main-nav">
-            @php
-                try {
-                    $navCategories = \App\Models\Category::whereNull('parent_id')->where('is_active', true)->with('children')->orderBy('sort_order')->get();
-                } catch (\Exception $e) {
-                    $navCategories = collect();
-                }
-            @endphp
-            @foreach($navCategories as $cat)
-                @if($cat->children->isNotEmpty())
-                    <div class="dropdown">
-                        <a href="{{ route('category.show', $cat) }}">{{ $cat->name }} <i class="fas fa-chevron-down" style="font-size:9px;"></i></a>
-                        <div class="dropdown-menu">
-                            @foreach($cat->children as $sub)
-                                <a href="{{ route('category.show', $sub) }}">{{ $sub->name }}</a>
-                            @endforeach
-                        </div>
-                    </div>
-                @else
-                    <a href="{{ route('category.show', $cat) }}">{{ $cat->name }}</a>
-                @endif
-            @endforeach
-            <a href="{{ route('blog.index') }}">Blog</a>
-        </nav>
-
-        <form action="{{ route('search') }}" method="GET" class="header-search">
-            <i class="fas fa-magnifying-glass"></i>
-            <input type="text" name="q" placeholder="Ürün ara..." value="{{ request('q') }}">
-        </form>
-
-        <div class="header-icons">
-            <a href="{{ route('wishlist.index') }}" class="header-icon-btn" title="Favorilerim">
-                <i class="far fa-heart"></i>
-                <span class="badge" id="wishlist-count" style="{{ count(session('wishlist', [])) > 0 ? '' : 'display:none;' }}">{{ count(session('wishlist', [])) }}</span>
-            </a>
-            @auth
-                <a href="{{ route('account.index') }}" class="header-icon-btn" title="Hesabım">
-                    <i class="far fa-user"></i>
+            <!-- Center: Logo -->
+            <div class="header-center">
+                <a href="{{ route('home') }}" class="logo-main">
+                    @if(\App\Models\Setting::get('site_logo'))
+                        <img src="{{ Storage::url(\App\Models\Setting::get('site_logo')) }}" alt="{{ \App\Models\Setting::get('site_name', 'BendyyYatak') }}">
+                    @else
+                        Bendyy<span>Yatak</span>
+                        <small>SADECE UYKU</small>
+                    @endif
                 </a>
-            @else
-                <a href="{{ route('login') }}" class="header-icon-btn" title="Giriş Yap">
-                    <i class="far fa-user"></i>
-                </a>
-            @endauth
-            <a href="{{ route('cart.index') }}" class="header-icon-btn" title="Sepetim">
-                <i class="fas fa-shopping-bag"></i>
-                @php $cartCount = array_sum(array_column(session('cart', []), 'quantity')); @endphp
-                @if($cartCount > 0)
-                    <span class="badge" id="cart-count">{{ $cartCount }}</span>
-                @else
-                    <span class="badge" id="cart-count" style="display:none;">0</span>
-                @endif
-            </a>
+            </div>
+
+            <!-- Right Side: Search & Icons -->
+            <div class="header-right">
+                <form action="{{ route('search') }}" method="GET" class="search-form">
+                    <input type="text" name="q" placeholder="Aradığınız ürünü yazınız..." value="{{ request('q') }}">
+                    <button type="submit"><i class="fas fa-magnifying-glass"></i></button>
+                </form>
+
+                <div class="header-actions">
+                    <a href="{{ route('wishlist.index') }}" class="action-item">
+                        <i class="far fa-heart"></i>
+                        <span class="badge" id="wishlist-count" style="{{ count(session('wishlist', [])) > 0 ? '' : 'display:none;' }}">{{ count(session('wishlist', [])) }}</span>
+                    </a>
+                    @auth
+                        <a href="{{ route('account.index') }}" class="action-item">
+                            <i class="far fa-user"></i>
+                            <span>Hesabım</span>
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}" class="action-item">
+                            <i class="far fa-user"></i>
+                            <span>Giriş Yap</span>
+                        </a>
+                    @endauth
+
+                    <a href="{{ route('cart.index') }}" class="action-item cart-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Sepetim</span>
+                        @php $cartCount = array_sum(array_column(session('cart', []), 'quantity')); @endphp
+                        <span class="badge" id="cart-count" style="{{ $cartCount > 0 ? '' : 'display:none;' }}">{{ $cartCount }}</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </header>

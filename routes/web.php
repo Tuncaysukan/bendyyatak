@@ -85,3 +85,30 @@ Route::get('/sitemap.xml', [Shop\SitemapController::class, 'index'])->name('site
 
 // Auth (Laravel Breeze tarafından üretilecek)
 require __DIR__.'/auth.php';
+
+// ─── Cache Clearing Routes ─────────────────────────────────────
+Route::get('/optimize', function() {
+    \Artisan::call('optimize:clear');
+    return "Optimized / All Cache Cleared";
+});
+
+Route::get('/clear-cache', function() {
+    \Artisan::call('cache:clear');
+    return "Cache Cleared";
+});
+
+Route::get('/clear-config', function() {
+    \Artisan::call('config:clear');
+    return "Config Cache Cleared";
+});
+
+Route::get('/clear-route', function() {
+    \Artisan::call('route:clear');
+    return "Route Cache Cleared";
+});
+
+Route::get('/clear-view', function() {
+    \Artisan::call('view:clear');
+    return "View Cache Cleared";
+});
+
