@@ -184,8 +184,8 @@ img {
 .action-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 16px;
+    gap: 8px;
+    padding: 8px 12px;
     border: 1px solid var(--border);
     border-radius: 8px;
     font-size: 13px;
@@ -194,6 +194,7 @@ img {
     transition: all 0.2s;
     position: relative;
     background: #fff;
+    white-space: nowrap;
 }
 
 .action-item:hover {
@@ -302,12 +303,12 @@ img {
 }
 
 .header-hide-mobile {
-    display: flex !important;
+    display: flex;
 }
 
 @media (max-width: 1024px) {
     .header-hide-mobile {
-        display: none;
+        display: none !important;
     }
 
     .header-hide-desktop {
@@ -996,17 +997,31 @@ img {
     }
 
     .header-container {
+        display: flex !important;
         flex-direction: row;
         flex-wrap: wrap;
-        position: relative;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .header-left {
+        width: 40px;
+        order: 1;
     }
 
     .header-center {
-        position: static;
-        transform: none;
         flex: 1;
-        text-align: left;
-        padding-left: 10px;
+        text-align: center;
+        order: 2;
+        padding: 0;
+    }
+
+    .header-right {
+        order: 3;
+        flex: 0 0 auto;
+        gap: 5px;
+        justify-content: flex-end;
     }
 
     .logo-main span {
@@ -1027,8 +1042,10 @@ img {
     }
 
     .search-form {
+        display: none;
         order: 4;
-        width: 100%;
+        flex: 0 0 100%;
+        width: 100% !important;
         margin-top: 10px;
         background: #f4f5f9;
         border-radius: 10px;

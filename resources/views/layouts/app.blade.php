@@ -39,7 +39,7 @@
         }
     </script>
 
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}?v=1.2">
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}?v=1.6">
     @stack('styles')
 </head>
 <body>
